@@ -42,6 +42,7 @@ const init = () => {
         }
         else if (answers.actionChoice === 'Add an Employee') {
           // statement to add an employee.
+          addEmployeePrompt()
         }
         else if (answers.actionChoice === 'Remove an employee') {
           // statement to remove an employee
@@ -53,6 +54,66 @@ const init = () => {
           // statement to update employee's manager
         }
       })
+}
+
+// query to get all department names
+function showDept() {
+  connection.query('SELECT name FROM department', (err, res) => {
+    if (err) throw err;
+    return(res);
+  })
+}
+
+// query to get all employee names
+function showEmp() {
+  connection.query('SELECT name FROM employee', (err, res) => {
+    if (err) throw err;
+    return(res);
+  })
+}
+
+// query to find id of employee by name
+
+function addEmployeePrompt() {
+  inquirer.prompt(
+    {
+      type:'input',
+      message:'ID #?',
+      name: lastName
+    },
+    {
+      type:'input',
+      message:'First Name?',
+      name: firstName
+    },
+    {
+      type:'input',
+      message:'Last Name?',
+      name: lastName
+    },
+    {
+      type:'list',
+      message:'Role?',
+      name: department,
+      choices: showDept()
+    },
+    {
+      type:'list',
+      message:'Manager?',
+      name: manager,
+      choices: showEmp()
+    }
+  )
+  // .then((answers) => {
+
+  //   'INSERT INTO employee SET ?',
+  //   {
+  //     id: answers.id,
+  //     first_name: answers.firstName,
+  //     last_name: answers.lastName,
+  //     department:
+  //   }
+  // })
 }
 
 // connect to the mysql server and sql database
