@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
     database: 'employeetracker',
 });
 
-const initialize = () => {
+const init = () => {
     inquirer.prompt(
         {
             type:'list',
@@ -24,26 +24,40 @@ const initialize = () => {
             name:'actionChoice',
             choices:['View All Employees','View All Employees By Department', 'View All Employees by Role', 'Add an Employee', 'Remove an Employee', 'Update Employee Role', 'Update Employee Manager']
         })
-      }
-//       .then( answers => {
-//         if (answers.actionChoice === 'View All Employees') {
-//           // print the employees table
-//         }
-//         else if (answers.actionChoice === 'View All Employees By Department')
-//       })
-// }
+      .then( answers => {
+        if (answers.actionChoice === 'View All Employees') {
+          // print the employees table
+          console.log('Displaying all employees...\n');
+          connection.query('SELECT * FROM employee', (err, res) => {
+            if (err) throw err;
+            console.table(res);
+          })
+        }
+        else if (answers.actionChoice === 'View All Employees By Department') {
+          // statement to view employees by dept.
+
+        }
+        else if (answers.actionChoice === 'View All Employees By Role') {
+          // statement to view employees by role.
+        }
+        else if (answers.actionChoice === 'Add an Employee') {
+          // statement to add an employee.
+        }
+        else if (answers.actionChoice === 'Remove an employee') {
+          // statement to remove an employee
+        }
+        else if (answers.actionChoice === 'Update Employee Role') {
+          // statement to update an employee's role
+        }
+        else if (answers.actionChoice === 'Update Employee Manager') {
+          // statement to update employee's manager
+        }
+      })
+}
 
 // connect to the mysql server and sql database
 connection.connect((err) => {
     if (err) throw err;
     // run the start function after the connection is made to prompt the user
-    console.table([
-        {
-          name: 'foo',
-          age: 10
-        }, {
-          name: 'bar',
-          age: 20
-        }
-      ]);
+    init();
   });
