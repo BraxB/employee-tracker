@@ -1,0 +1,24 @@
+{
+  "name": "employeetracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "employee_tracker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BraxB/employee_tracker.git"
+  },
+  "author": "Brax",
+  "license": "ISC",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "8.0.0",
+    "mysql": "2.18.1"
+  },
+  "bugs": {
+    "url": "https://github.com/BraxB/employee_tracker/issues"
+  },
+  "homepage": "https://github.com/BraxB/employee_tracker#readme"
+}
