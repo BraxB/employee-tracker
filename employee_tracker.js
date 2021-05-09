@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
   
     // Your port; if not 3306
-    port: process.env.PORT || 3306,
+    port: 3306,
   
     // Your username
     user: 'root',
@@ -16,13 +16,21 @@ const connection = mysql.createConnection({
     database: 'employeetracker',
 });
 
+function welcome() {
+  console.log(`
+░█▀▀░█▄█░█▀█░█░░░█▀█░█░█░█▀▀░█▀▀░░░▀█▀░█▀▄░█▀█░█▀▀░█░█░█▀▀░█▀▄
+░█▀▀░█░█░█▀▀░█░░░█░█░░█░░█▀▀░█▀▀░░░░█░░█▀▄░█▀█░█░░░█▀▄░█▀▀░█▀▄
+░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀▀░░▀░░▀▀▀░▀▀▀░░░░▀░░▀░▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀░▀`)
+}
+
 const init = () => {
+    welcome()
     inquirer.prompt(
         {
             type:'list',
             message:'What would you like to do?',
             name:'actionChoice',
-            choices:['View All Employees','View All Employees By Department', 'View All Employees by Role', 'Add an Employee', 'Remove an Employee', 'Update Employee Role', 'Update Employee Manager']
+            choices:['View All Employees','View All Employees By Department', 'View All Employees by Role', 'Add an Employee', 'Remove an Employee', 'Update Employee Role', 'Update Employee Manager', 'Exit']
         })
       .then( answers => {
         if (answers.actionChoice === 'View All Employees') {
@@ -40,6 +48,7 @@ const init = () => {
         }
         else if (answers.actionChoice === 'View All Employees by Role') {
           // statement to view employees by role.
+          selectByRole();
         }
         else if (answers.actionChoice === 'Add an Employee') {
           // statement to add an employee.
@@ -56,6 +65,9 @@ const init = () => {
         else if (answers.actionChoice === 'Update Employee Manager') {
           // statement to update employee's manager
           updateManager();
+        }
+        else if (answers.actionChoice === 'Exit') {
+          process.exit(0)
         }
       })
 }
@@ -81,6 +93,37 @@ function selectByDept() {
       connection.query(
         `SELECT CONCAT(first_name, " ", last_name) AS full_name, title, name FROM employee INNER JOIN role ON role.role_id = employee.role_id INNER JOIN department ON role.dept_id = department.dept_id WHERE name = ?`,
         answers.dept,
+        (err, res) => {
+          if (err) throw err;
+          console.table(res);
+          init();
+        }
+      )
+    })
+  })
+}
+
+function selectByRole() {
+  let roles = {}
+  connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name, employee.role_id, title FROM employee INNER JOIN role ON role.role_id = employee.role_id', (err, res) => {
+    if (err) throw err;
+    res.forEach(({title, role_id}) => {
+      roles[title] = role_id;
+    });
+    inquirer.prompt([
+      {
+        type:'list',
+        message: 'Select a role',
+        name: 'role',
+        choices() {
+          return Object.keys(roles).filter(x => x !== 'null');
+        }
+      }
+    ])
+    .then((answers) => {
+      connection.query(
+        `SELECT CONCAT(first_name, " ", last_name) AS full_name, title FROM employee INNER JOIN role ON role.role_id = employee.role_id WHERE title = ?`,
+        answers.role,
         (err, res) => {
           if (err) throw err;
           console.table(res);
@@ -222,7 +265,7 @@ function updateManager() {
   })
 }
 
-// prompt and function to update roll
+// prompt and function to update role
 function updateRole() {
   let names = {};
   let roles = {};
