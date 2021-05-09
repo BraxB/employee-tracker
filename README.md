@@ -34,6 +34,8 @@ After completing this project, I feel much more comfortable with SQL including u
 2. Run NPM install to get all necessary dependencies
 3. In your terminal of choice, run 'node employee_tracker.js' and follow prompts
 
+[Video Tutorial](https://drive.google.com/file/d/1bNegS-2lyJIPHHPzFSftrAdDsjKSeAE3/view)
+
 ## Contributing
 
 <a id='Contributing'></a>
