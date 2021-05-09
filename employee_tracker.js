@@ -43,10 +43,11 @@ const init = () => {
         }
         else if (answers.actionChoice === 'Add an Employee') {
           // statement to add an employee.
-          addEmployeePrompt()
+          addEmployeePrompt();
         }
         else if (answers.actionChoice === 'Remove an employee') {
           // statement to remove an employee
+          deleteEmployee();
         }
         else if (answers.actionChoice === 'Update Employee Role') {
           // statement to update an employee's role
@@ -55,26 +56,6 @@ const init = () => {
           // statement to update employee's manager
         }
       })
-}
-
-// query to get employee ID based on manager input
-function getEmpId() {
-  connection.query(
-    'SELECT id FROM employee WHERE CONCAT(first_name, " ", last_name) AS full_name = ?', answers.manager, (err, res) => {
-      if (err) throw err;
-      return(res);
-    }
-  )
-}
-
-// query to get role ID based on role name input
-function getRoleId() {
-  connection.query(
-    'SELECT id FROM role WHERE title = ?', answers.role, (err, res) => {
-      if (err) throw err;
-      return(res);
-    }
-  )
 }
 
 function addEmployeePrompt() {
@@ -119,16 +100,10 @@ function addEmployeePrompt() {
       }
     ])
     .then((answers) => {
-        let mgrid = getEmpId();
-        let roleid = getRoleId();
         connection.query(
-          'INSERT INTO employee SET ?',
-          {
-            first_name: answers.firstName,
-            last_name: answers.lastName,
-            role_id: roleid,
-            manager: mgrid
-          },
+          `INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+          VALUES (?,?,(SELECT role_id FROM role WHERE title = ?),(SELECT emp_id FROM employee e WHERE CONCAT(e.first_name, " ", e.last_name) = ?));`,
+          [answers.firstName, answers.lastName, answers.role, answers.manager],
           (err) => {
             if (err) throw err;
             console.log('Employee added!');
@@ -137,6 +112,39 @@ function addEmployeePrompt() {
         )
     })
   })
+}
+
+function deleteEmployee() {
+  connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name FROM employees'), (err, res) =>  {
+    let nameid = {};
+    if (err) throw err;
+    inquirer.prompt(
+      {
+        type:'list',
+        message:'Who should be removed?',
+        name: 'deletee',
+        choices() {
+          let names = [];
+          res.forEach(({full_name, emp_id}) => {
+            names.push(full_name);
+            nameid[full_name] = emp_id;
+          });
+          return names; 
+        }
+      }
+    )
+    .then((answers) => {
+      connection.query(
+        'DELETE FROM employee WHERE emp_id = ?',
+        nameid[answers.deletee],
+        (err) => {
+          if (err) throw err;
+          console.log('Employee deleted!');
+          init()
+        }
+      )
+    })
+  }
 }
 
 // connect to the mysql server and sql database
