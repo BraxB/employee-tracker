@@ -36,7 +36,7 @@ const init = () => {
         }
         else if (answers.actionChoice === 'View All Employees By Department') {
           // statement to view employees by dept.
-
+          selectByDept();
         }
         else if (answers.actionChoice === 'View All Employees by Role') {
           // statement to view employees by role.
@@ -58,6 +58,37 @@ const init = () => {
           updateManager();
         }
       })
+}
+
+function selectByDept() {
+  let departments = {}
+  connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name, employee.role_id, title, name, department.dept_id FROM employee INNER JOIN role ON role.role_id = employee.role_id INNER JOIN department ON role.dept_id = department.dept_id', (err, res) => {
+    if (err) throw err;
+    res.forEach(({name, dept_id}) => {
+      departments[name] = dept_id;
+    });
+    inquirer.prompt([
+      {
+        type:'list',
+        message: 'Select a department',
+        name: 'dept',
+        choices() {
+          return Object.keys(departments).filter(x => x !== 'null');
+        }
+      }
+    ])
+    .then((answers) => {
+      connection.query(
+        `SELECT CONCAT(first_name, " ", last_name) AS full_name, title, name FROM employee INNER JOIN role ON role.role_id = employee.role_id INNER JOIN department ON role.dept_id = department.dept_id WHERE name = ?`,
+        answers.dept,
+        (err, res) => {
+          if (err) throw err;
+          console.table(res);
+          init();
+        }
+      )
+    })
+  })
 }
 
 // prompt and function to add employee
