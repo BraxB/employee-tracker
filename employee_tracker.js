@@ -25,7 +25,6 @@ function welcome() {
 }
 
 const init = () => {
-    welcome()
     inquirer.prompt(
         {
             type:'list',
@@ -137,8 +136,12 @@ function selectByRole() {
 
 // prompt and function to add employee
 function addEmployeePrompt() {
+  let nameid = {};
   connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name, first_name, last_name, employee.role_id, title FROM employee RIGHT JOIN role ON employee.role_id = role.role_id', (err, results) => {
     if (err) throw err;
+    results.forEach(({full_name, emp_id}) => {
+      nameid[full_name] = emp_id;
+    });
     inquirer.prompt([
       {
         type:'input',
@@ -169,11 +172,7 @@ function addEmployeePrompt() {
         message:'Manager?',
         name: 'manager',
         choices() {
-          const choiceArray = [];
-            results.forEach(({ full_name }) => {
-              choiceArray.push(full_name)
-            });
-            return choiceArray;
+          return Object.keys(nameid).filter(x => x !== 'null');
         }
       }
     ])
@@ -311,6 +310,7 @@ function updateRole() {
 // connect to the mysql server and sql database
 connection.connect((err) => {
   if (err) throw err;
+  welcome()
   // run the start function after the connection is made to prompt the user
   init();
 });
