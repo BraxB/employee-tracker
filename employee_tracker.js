@@ -51,9 +51,11 @@ const init = () => {
         }
         else if (answers.actionChoice === 'Update Employee Role') {
           // statement to update an employee's role
+          updateRole();
         }
         else if (answers.actionChoice === 'Update Employee Manager') {
           // statement to update employee's manager
+          updateManager();
         }
       })
 }
@@ -140,6 +142,86 @@ function deleteEmployee() {
         (err) => {
           if (err) throw err;
           console.log('Employee deleted!');
+          init()
+        }
+      )
+    })
+  })
+}
+
+function updateManager() {
+  connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name FROM employee', (err, res) =>  {
+    if (err) throw err;
+    let nameid = {};
+    let names = [];
+    inquirer.prompt([
+      {
+        type:'list',
+        message:"Whose manager should be updated?",
+        name: 'updatee',
+        choices() {
+          res.forEach(({full_name, emp_id}) => {
+            names.push(full_name);
+            nameid[full_name] = emp_id;
+          });
+          return names; 
+        }
+      },
+      {
+        type:'list',
+        message:"Who is their new manager?",
+        name: 'newmgr',
+        choices() {return names}
+      }
+    ])
+    .then((answers) => {
+      connection.query(
+        'UPDATE employee SET manager_id = ? WHERE emp_id = ?',
+        [nameid[answers.newmgr], nameid[answers.updatee]],
+        (err) => {
+          if (err) throw err;
+          console.log('Employee updated!');
+          init()
+        }
+      )
+    })
+  })
+}
+
+function updateRole() {
+  let names = {};
+  let roles = {};
+  connection.query('SELECT emp_id, r.title AS title, r.role_id AS role_id, CONCAT(first_name, " ", last_name) AS full_name FROM employee e RIGHT JOIN role r ON e.role_id = r.role_id', (err, res) =>  {
+    if (err) throw err;
+    res.forEach(({full_name, emp_id, title, role_id}) => {
+      names[full_name] = emp_id;
+      roles[title] = role_id;
+    });
+    inquirer.prompt([
+      {
+        type:'list',
+        message:"Whose role should be updated?",
+        name: 'updatee',
+        choices() {
+          return Object.keys(names).filter(x => x !== 'null');
+        }
+      },
+      {
+        type:'list',
+        message:"What is their new role?",
+        name: 'newRole',
+        choices() {
+          return Object.keys(roles);
+        }
+      }
+    ])
+    .then((answers) => {
+      connection.query(
+        'UPDATE employee SET role_id = ? WHERE emp_id = ?',
+        [roles[answers.newRole], names[answers.updatee]],
+        (err) => {
+          if (err) throw err;
+          console.log('Employee updated!');
           init()
         }
       )
