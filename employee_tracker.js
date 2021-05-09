@@ -60,6 +60,7 @@ const init = () => {
       })
 }
 
+// prompt and function to add employee
 function addEmployeePrompt() {
   connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name, first_name, last_name, employee.role_id, title FROM employee RIGHT JOIN role ON employee.role_id = role.role_id', (err, results) => {
     if (err) throw err;
@@ -116,6 +117,7 @@ function addEmployeePrompt() {
   })
 }
 
+// prompt and function to delete employee
 function deleteEmployee() {
   connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name FROM employee', (err, res) =>  {
     if (err) throw err;
@@ -149,6 +151,7 @@ function deleteEmployee() {
   })
 }
 
+// prompt and function to update manager
 function updateManager() {
   connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name FROM employee', (err, res) =>  {
     if (err) throw err;
@@ -188,6 +191,7 @@ function updateManager() {
   })
 }
 
+// prompt and function to update roll
 function updateRole() {
   let names = {};
   let roles = {};
