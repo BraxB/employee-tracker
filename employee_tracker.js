@@ -38,14 +38,14 @@ const init = () => {
           // statement to view employees by dept.
 
         }
-        else if (answers.actionChoice === 'View All Employees By Role') {
+        else if (answers.actionChoice === 'View All Employees by Role') {
           // statement to view employees by role.
         }
         else if (answers.actionChoice === 'Add an Employee') {
           // statement to add an employee.
           addEmployeePrompt();
         }
-        else if (answers.actionChoice === 'Remove an employee') {
+        else if (answers.actionChoice === 'Remove an Employee') {
           // statement to remove an employee
           deleteEmployee();
         }
@@ -115,10 +115,10 @@ function addEmployeePrompt() {
 }
 
 function deleteEmployee() {
-  connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name FROM employees'), (err, res) =>  {
-    let nameid = {};
+  connection.query('SELECT emp_id, CONCAT(first_name, " ", last_name) AS full_name FROM employee', (err, res) =>  {
     if (err) throw err;
-    inquirer.prompt(
+    let nameid = {};
+    inquirer.prompt([
       {
         type:'list',
         message:'Who should be removed?',
@@ -132,7 +132,7 @@ function deleteEmployee() {
           return names; 
         }
       }
-    )
+    ])
     .then((answers) => {
       connection.query(
         'DELETE FROM employee WHERE emp_id = ?',
@@ -144,7 +144,7 @@ function deleteEmployee() {
         }
       )
     })
-  }
+  })
 }
 
 // connect to the mysql server and sql database
