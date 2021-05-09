@@ -1,7 +1,7 @@
 USE employeeTracker;
 
 INSERT INTO department (
-    id,
+    dept_id,
     name 
 )
 VALUES
@@ -27,10 +27,10 @@ VALUES
     );
 
 INSERT INTO role (
-    id,
+    role_id,
     title,
     salary,
-    department_id
+    dept_id
 )
 VALUES
     (
@@ -77,7 +77,6 @@ VALUES
     );
 
 INSERT INTO employee (
-    id,
     first_name,
     last_name,
     role_id,
@@ -85,154 +84,132 @@ INSERT INTO employee (
 )
 VALUES
     (
-        1,
         'Sleve',
         'McDichael',
         1,
         NULL
     ),
     (
-        2,
         'Onson',
         'Sweemey',
         1,
         1
     ),
     (
-        3,
         'Darryl',
         'Archideld',
         1,
         1
     ),
     (
-        4,
         'Anatoli',
         'Smorin',
         2,
         1
     ),
     (
-        5,
         'Rey',
         'McSriff',
         3,
         NULL
     ),
     (
-        6,
         'Glenallen',
         'Mixon',
         3,
         5
     ),
     (
-        7,
         'Mario',
         'Mcrlwain',
         4,
         NULL
     ),
     (
-        8,
         'Raul',
         'Chamgerlain',
         4,
         7
     ),
     (
-        9,
         'Kevin',
         'Nogily',
         5,
         NULL
     ),
     (
-        10,
         'Tony',
         'Smehrik',
         5,
         9
     ),
     (
-        11,
         'Bobson',
         'Dugnutt',
         5,
         9
     ),
     (
-        12,
         'Willie',
         'Dustice',
         5,
         9
     ),
     (
-        13,
         'Jeromy',
         'Gride',
         6,
         NULL
     ),
     (
-        14,
         'Scote',
         'Dourque',
         6,
         13
     ),
     (
-        15,
         'Shown',
         'Furcotte',
         6,
         13
     ),
     (
-        16,
         'Dean',
         'Wesrey',
         6,
         NULL
     ),
     (
-        17,
         'Mike',
         'Truk',
         6,
         16
     ),
     (
-        18,
         'Dwigt',
         'Rortugal',
         6,
         16
     ),
     (
-        19,
         'Tim',
         'Sandaele',
         7,
         NULL
     ),
     (
-        20,
         'Karl',
         'Dandleton',
         7,
         19
     ),
     (
-        21,
         'Mike',
         'Sernandez',
         7,
         19
     ),
     (
-        22,
         'Todd',
         'Bonzalez',
         7,

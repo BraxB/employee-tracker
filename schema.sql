@@ -6,27 +6,27 @@ USE employeeTracker;
 
 -- creating tables for department, role, and employee --
 CREATE TABLE department (
-    id INT NOT NULL,
+    dept_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(30),
-    PRIMARY KEY (id)
+    PRIMARY KEY (dept_id)
 );
 
 CREATE TABLE role (
-    id INT NOT NULL,
+    role_id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30),
     salary DECIMAL(10,2),
-    department_id INT,
-    PRIMARY KEY (id),
-    FOREIGN KEY (department_id) REFERENCES department(id)
+    dept_id INT,
+    PRIMARY KEY (role_id),
+    FOREIGN KEY (dept_id) REFERENCES department(dept_id)
 );
 
 CREATE TABLE employee (
-    id INT NOT NULL,
+    emp_id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     role_id INT,
     manager_id INT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (role_id) REFERENCES role(id),
-    FOREIGN KEY (manager_id) REFERENCES employee(id)
+    PRIMARY KEY (emp_id),
+    FOREIGN KEY (role_id) REFERENCES role(role_id),
+    FOREIGN KEY (manager_id) REFERENCES employee(emp_id)
 );
