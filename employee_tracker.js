@@ -16,6 +16,7 @@ const connection = mysql.createConnection({
     database: 'employeetracker',
 });
 
+//function to print welcome screen
 function welcome() {
   console.log(`
 ░█▀▀░█▄█░█▀█░█░░░█▀█░█░█░█▀▀░█▀▀░░░▀█▀░█▀▄░█▀█░█▀▀░█░█░█▀▀░█▀▄
